@@ -124,7 +124,7 @@ class SystemEventsListener implements EventSubscriberInterface
                 null,
                 ElementsProcessManagerBundle::$maintenanceOptions
             );
-            $maintenance = new \Elements\Bundle\ProcessManagerBundle\Maintenance($this->renderingEngine);
+            $maintenance = new Maintenance($this->renderingEngine);
             $maintenance->execute();
         }
     }

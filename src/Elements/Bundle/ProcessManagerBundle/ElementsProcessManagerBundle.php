@@ -20,13 +20,15 @@ use Elements\Bundle\ProcessManagerBundle\Model\MonitoringItem;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 use Pimcore\Extension\Bundle\Installer\InstallerInterface;
 use Pimcore\Extension\Bundle\Traits\StateHelperTrait;
+use Elements\Bundle\ProcessManagerBundle\Executor\Logger\Console;
+use Elements\Bundle\ProcessManagerBundle\Executor\Logger\File;
 
 class ElementsProcessManagerBundle extends AbstractPimcoreBundle
 {
     use ExecutionTrait;
     use StateHelperTrait;
 
-    const VERSION = 9;
+    const VERSION = 10;
 
     public static $maintenanceOptions = [
         'autoCreate' => true,
@@ -34,13 +36,13 @@ class ElementsProcessManagerBundle extends AbstractPimcoreBundle
         'loggers' => [
             [
                 'logLevel' => 'DEBUG',
-                'class' => '\Elements\Bundle\ProcessManagerBundle\Executor\Logger\Console',
+                'class' => Console::class,
                 'simpleLogFormat' => true
             ],
             [
                 'logLevel' => 'DEBUG',
                 'filepath' => '/var/logs/process-manager-maintenance.log',
-                'class' => '\Elements\Bundle\ProcessManagerBundle\Executor\Logger\File',
+                'class' => File::class,
                 'simpleLogFormat' => true,
                 'maxFileSizeMB' => 50
             ]
@@ -165,7 +167,7 @@ class ElementsProcessManagerBundle extends AbstractPimcoreBundle
 
     public static function getConfig()
     {
-        if (is_null(self::$_config)) {
+        if (self::$_config === null) {
             $configFile = \Pimcore\Config::locateConfigFile('plugin-process-manager.php');
             self::$_config = include $configFile;
         }

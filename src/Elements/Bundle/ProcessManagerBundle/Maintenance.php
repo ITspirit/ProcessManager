@@ -170,8 +170,8 @@ class Maintenance
         $this->monitoringItem->setCurrentStep(3)->setMessage('Clearing monitoring logs')->save();
         $logger = $this->monitoringItem->getLogger();
 
-        $treshold = ElementsProcessManagerBundle::getConfig()['general']['archive_treshold_logs'];
-        if ($treshold) {
+        $threshold = ElementsProcessManagerBundle::getConfig()['general']['archive_threshold_logs'];
+        if ($threshold) {
             $timestamp = Carbon::createFromTimestamp(time())->subDay(1)->getTimestamp();
             $list = new MonitoringItem\Listing();
             $list->setCondition('modificationDate <= '. $timestamp);
@@ -182,7 +182,7 @@ class Maintenance
                 $item->delete();
             }
         } else {
-            $logger->notice('No treshold defined -> nothing to do.');
+            $logger->notice('No threshold defined -> nothing to do.');
         }
 
         $logger->debug('Start clearing ProcessManager maintenance items');

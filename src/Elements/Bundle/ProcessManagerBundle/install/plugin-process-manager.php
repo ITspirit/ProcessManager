@@ -13,11 +13,21 @@
  *  @license    http://www.pimcore.org/license     GPLv3 and PEL
  */
 
+use Elements\Bundle\ProcessManagerBundle\Executor\{Callback\ExecutionNote,
+    Action\Download,
+    Logger\EmailSummary,
+    Logger\Application,
+    Logger\Console,
+    Logger\File,
+    ClassMethod,
+    CliCommand,
+    PimcoreCommand};
+
 $systemConfig = \Pimcore\Config::getSystemConfig()->toArray();
 
 return [
     'general' => [
-        'archive_treshold_logs' => 7, //keep monitoring items for x Days
+        'archive_threshold_logs' => 7, //keep monitoring items for x Days
         'executeWithMaintenance' => true, //do execute with maintenance (deactivate if you set up a separate cronjob)
         'processTimeoutMinutes' => 15, //if no update of the monitoring item is done within this amount of minutes the process is considered as "hanging"
         //'additionalScriptExecutionUsers' => ['deployer', 'vagrant'] //additional system users which are allowed to execute the scripts
@@ -28,38 +38,38 @@ return [
     ],
     'executorClasses' => [
         [
-            'class' => '\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\PimcoreCommand'
+            'class' => PimcoreCommand::class
         ],
         [
-            'class' => '\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\CliCommand'
+            'class' => CliCommand::class
         ],
         [
-            'class' => '\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\ClassMethod'
+            'class' => ClassMethod::class
         ]
     ],
     'executorLoggerClasses' => [
         [
-            'class' => '\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\Logger\\File'
+            'class' => File::class
 
         ],
         [
-            'class' => '\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\Logger\\Console'
+            'class' => Console::class
         ],
         [
-            'class' => '\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\Logger\\Application'
+            'class' => Application::class
         ],
         [
-            "class" => "\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\Logger\\EmailSummary"
+            'class' => EmailSummary::class
         ]
     ],
     'executorActionClasses' => [
         [
-            'class' => '\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\Action\\Download'
+            'class' => Download::class
         ]
     ],
     'executorCallbackClasses' => [
         [
-            'class' => '\\Elements\\Bundle\\ProcessManagerBundle\\Executor\\Callback\\ExecutionNote'
+            'class' => ExecutionNote::class
         ]
     ]
 ];

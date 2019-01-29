@@ -43,7 +43,7 @@ class Updater
 
     public function execute()
     {
-        $monitoringItem = ElementsProcessManagerBundle::getMonitoringItem(php_sapi_name() === 'cli' ? true : false);
+        $monitoringItem = ElementsProcessManagerBundle::getMonitoringItem(php_sapi_name() === 'cli');
 
         $lastVersion = 0;
         $versionFile = ElementsProcessManagerBundle::getVersionFile();
@@ -70,7 +70,7 @@ class Updater
             if ($vNumber > $lastVersion) {
                 if ($monitoringItem) {
                     $monitoringItem->getLogger()->notice(
-                        'Updating to version: '.$vNumber.' | executin method: '.$method.'()'
+                        'Updating to version: '.$vNumber.' | executing method: '.$method.'()'
                     );
                 }
                 $self->$method();
@@ -275,9 +275,17 @@ ENGINE=InnoDB
         \Pimcore\Cache::clearTags(['system', 'resource']);
     }
 
+    public function updateVersion10()
+    {
+        $configFile = \Pimcore\Config::locateConfigFile('plugin-process-manager.php');
+        $content = file_get_contents($configFile);
+        $content = str_replace('archive_treshold_logs', 'archive_threshold_logs', $content);
+        file_put_contents($configFile, $content);
+    }
+
     protected function copyConfig()
     {
-        $configFile = dirname(__FILE__).'/install/plugin-process-manager.php';
+        $configFile = __DIR__ .'/install/plugin-process-manager.php';
         if (!is_dir(PIMCORE_CUSTOM_CONFIGURATION_DIRECTORY)) {
             \Pimcore\File::mkdir(PIMCORE_CUSTOM_CONFIGURATION_DIRECTORY);
         }

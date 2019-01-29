@@ -49,55 +49,73 @@ The configuration is done by the file /website/config/plugin-process-manager.php
 It looks like this
 ```php
 <?php
+
+use Elements\Bundle\ProcessManagerBundle\Executor\{
+    Callback\ExecutionNote,
+    Action\Download,
+    Logger\EmailSummary,
+    Logger\Application,
+    Logger\Console,
+    Logger\File,
+    ClassMethod,
+    CliCommand,
+    PimcoreCommand
+};
+
 $systemConfig = \Pimcore\Config::getSystemConfig()->toArray();
+
 return [
     'general' => [
-        "archive_treshold_logs" => 7, //keep monitoring items for x Days
+        'archive_threshold_logs' => 7, //keep monitoring items for x Days
         'executeWithMaintenance' => true //do execute with maintenance (deactivate if you set up a separate cronjob)
     ],
     'email' => [
-        'recipients' => explode(';',(string)$systemConfig['applicationlog']['mail_notification']['mail_receiver']), //gets a reporting e-mail when a process is dead
+        'recipients' => explode(';', (string)$systemConfig['applicationlog']['mail_notification']['mail_receiver']), //gets a reporting e-mail when a process is dead
     ],
-    "executorClasses" => [
+    'executorClasses' => [
         [
-            "class" => "\\ProcessManager\\Executor\\PimcoreCommand"
+            'class' => PimcoreCommand::class
         ],
         [
-            "class" => "\\ProcessManager\\Executor\\CliCommand"
+            'class' => CliCommand::class
         ],
         [
-            "class" => "\\ProcessManager\\Executor\\ClassMethod"
+            'class' => ClassMethod::class
         ]
     ],
-    "executorLoggerClasses" => [
+    'executorLoggerClasses' => [
         [
-            "class" => "\\ProcessManager\\Executor\\Logger\\File"
+            'class' => File::class
+
         ],
         [
-            "class" => "\\ProcessManager\\Executor\\Logger\\Console"
+            'class' => Console::class
         ],
         [
-            "class" => "\\ProcessManager\\Executor\\Logger\\Application"
+            'class' => Application::class
+        ],
+        [
+            'class' => EmailSummary::class
         ]
     ],
-    "executorActionClasses" => [
+    'executorActionClasses' => [
         [
-            "class" => "\\ProcessManager\\Executor\\Action\\Download"
+            'class' => Download::class
         ]
     ],
-    "executorCallbackClasses" => [
+    'executorCallbackClasses' => [
         [
-            "name" => "example",
-            "class" => "\\ProcessManager\\Executor\\Callback\\General",
-            "extJsClass" => "pimcore.plugin.processmanager.executor.callback.example",
+            'class' => ExecutionNote::class
         ],
         [
-            "class" => "\\ProcessManager\\Executor\\Callback\\ExecutionNote"
+            'name' => 'example',
+            'class' => \ProcessManager\Executor\Callback\General::class,
+            'extJsClass' => 'pimcore.plugin.processmanager.executor.callback.example',
         ],
         [
-            "name" => "exportProducts",
-            "class" => "\\ProcessManager\\Executor\\Callback\\General",
-            "extJsClass" => "pimcore.plugin.windhager.processmanager.executor.callback.exportProducts",
+            'name' => 'exportProducts',
+            'class' => \ProcessManager\Executor\Callback\General::class,
+            'extJsClass' => 'pimcore.plugin.windhager.processmanager.executor.callback.exportProducts',
         ]
     ]
 ];

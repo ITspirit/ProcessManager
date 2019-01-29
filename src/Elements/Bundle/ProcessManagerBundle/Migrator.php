@@ -113,10 +113,7 @@ class Migrator
             $db->update($tableName, $item, ['id' => $item['id']]);
         }
 
-        unset($tableName);
-        unset($list);
-        unset($item);
-        unset($executorClass);
+        unset($tableName, $list, $item, $executorClass);
 
         $tableName = ElementsProcessManagerBundle::TABLE_NAME_MONITORING_ITEM;
         $list = $db->fetchAll('select * from ' . $tableName);

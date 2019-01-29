@@ -15,7 +15,10 @@
 
 namespace Elements\Bundle\ProcessManagerBundle\Controller;
 
+use Elements\Bundle\ProcessManagerBundle\Executor\AbstractExecutor;
 use Elements\Bundle\ProcessManagerBundle\Executor\Action\AbstractAction;
+use Elements\Bundle\ProcessManagerBundle\Executor\Callback\AbstractCallback;
+use Elements\Bundle\ProcessManagerBundle\Executor\Logger\AbstractLogger;
 use Elements\Bundle\ProcessManagerBundle\Model\Configuration;
 use Elements\Bundle\ProcessManagerBundle\Model\MonitoringItem;
 use Elements\Bundle\ProcessManagerBundle\Updater;
@@ -45,10 +48,10 @@ class IndexController extends AdminController
         $pluginConfig = \Elements\Bundle\ProcessManagerBundle\ElementsProcessManagerBundle::getConfig();
 
         $classTypeMapping = [
-            'executorClasses' => '\Elements\Bundle\ProcessManagerBundle\Executor\AbstractExecutor',
-            'executorActionClasses' => '\Elements\Bundle\ProcessManagerBundle\Executor\Action\AbstractAction',
-            'executorCallbackClasses' => '\Elements\Bundle\ProcessManagerBundle\Executor\Callback\AbstractCallback',
-            'executorLoggerClasses' => '\Elements\Bundle\ProcessManagerBundle\Executor\Logger\AbstractLogger',
+            'executorClasses' => AbstractExecutor::class,
+            'executorActionClasses' => AbstractAction::class,
+            'executorCallbackClasses' => AbstractCallback::class,
+            'executorLoggerClasses' => AbstractLogger::class,
         ];
         foreach ($classTypeMapping as $classType => $abstractClassType) {
             if (is_null($data[$classType])) {

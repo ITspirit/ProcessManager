@@ -18,6 +18,7 @@ namespace Elements\Bundle\ProcessManagerBundle;
 use Elements\Bundle\ProcessManagerBundle\Model\Configuration;
 use Elements\Bundle\ProcessManagerBundle\Model\MonitoringItem;
 use Monolog\Logger;
+use Elements\Bundle\ProcessManagerBundle\Executor\Logger\Console;
 
 trait ExecutionTrait
 {
@@ -63,12 +64,12 @@ trait ExecutionTrait
                 /**
                  * only set console logger if dont pass loggers or the config doesn't have loggers
                  */
-                if (is_null($options['loggers']) && empty($monitoringItem->getLoggers())) {
+                if ($options['loggers'] === null && empty($monitoringItem->getLoggers())) {
                     $monitoringItem->setLoggers([
                         [
                             'logLevel' => 'DEBUG',
                             'simpleLogFormat' => 'on',
-                            'class' => '\Elements\Bundle\ProcessManagerBundle\Executor\Logger\Console'
+                            'class' => Console::class
                         ]
                     ]);
                 }
